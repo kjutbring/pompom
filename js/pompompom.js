@@ -3,12 +3,17 @@
 
 	timer to run a pomodoro timer
 
+	- TODO
+		toast notification (partly done)
+		progress bar(?)
+
 	author kjutbring
 */
 
-var totalSec = 3;
+var totalSec = 25 * 60;
 var counter;
 var amountPoms;
+var notification;
 
 function init() {
 	// get btns
@@ -55,9 +60,15 @@ function pompomup() {
 		document.getElementById("min").innerHTML = "00";
 		document.getElementById("sec").innerHTML = "00";
 
+		notification = new Notification("Pomodoro completed!", {
+			body: "Good job!"
+		});
+
+		totalSec = 25 * 60;
+		pompomStop();
+
 		document.getElementById("success").style.display = "block";
 		return;
-		clearInterval(counter);
 	}
 	
 	// add 0 before if needed
@@ -78,5 +89,6 @@ function pompomup() {
 
 window.onload = function() {
 	init();
+	browserSup();
 };
 
