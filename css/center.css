@@ -10,3 +10,9 @@
   text-align: center;
 }
 
+.alert {
+	width:300px;
+	margin:0 auto;
+ 	float:none;
+ 	display: none;
+}

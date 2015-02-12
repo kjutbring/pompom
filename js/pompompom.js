@@ -6,8 +6,9 @@
 	author kjutbring
 */
 
-var totalSec = 60 * 25;
+var totalSec = 3;
 var counter;
+var amountPoms;
 
 function init() {
 	// get btns
@@ -41,6 +42,7 @@ function pompomStop() {
 function pompomReset() {
 	clearInterval(counter);
 	totalSec = 	60 * 25;
+	document.getElementById("success").style.display = "none";
 	document.getElementById("min").innerHTML = Math.floor(totalSec / 60);
 	document.getElementById("sec").innerHTML = totalSec % 60 + "0";
 };
@@ -49,12 +51,29 @@ function pompomup() {
 	totalSec = totalSec -1;
 
 	if (totalSec <= 0) {
-		clearInterval(counter);
-		return;
-	}
+		// fulhack below
+		document.getElementById("min").innerHTML = "00";
+		document.getElementById("sec").innerHTML = "00";
 
-	document.getElementById("min").innerHTML = Math.floor(totalSec / 60);
-	document.getElementById("sec").innerHTML = totalSec % 60;
+		document.getElementById("success").style.display = "block";
+		return;
+		clearInterval(counter);
+	}
+	
+	// add 0 before if needed
+	if (Math.floor(totalSec / 60) < 10) {
+		document.getElementById("min").innerHTML = "0" + Math.floor(totalSec / 60);
+	}
+	else {
+		document.getElementById("min").innerHTML = Math.floor(totalSec / 60);
+	};
+
+	if (totalSec % 60 < 10) {
+		document.getElementById("sec").innerHTML = "0" + totalSec % 60;
+	}
+	else {
+		document.getElementById("sec").innerHTML = totalSec % 60;
+	};
 }
 
 window.onload = function() {
