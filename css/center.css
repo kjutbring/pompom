@@ -16,3 +16,7 @@
  	float:none;
  	display: none;
 }
+
+.btn-width {
+	width: 180px;
+}

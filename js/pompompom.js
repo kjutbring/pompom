@@ -11,6 +11,10 @@
 	author kjutbring
 */
 
+/* 
+	timer logic below
+*/
+
 var totalSec = 25 * 60;
 var noSpeed = 0;
 var counter;
@@ -22,6 +26,7 @@ function init() {
 	var startBtn = document.getElementById("start");
 	var stopBtn = document.getElementById("stop");
 	var resetBtn = document.getElementById("reset");
+	var loginBtn = document.getElementById("login");
 
 	startBtn.onclick = function() {
 		pompomStart();
@@ -33,6 +38,10 @@ function init() {
 
 	resetBtn.onclick = function() {
 		pompomReset();
+	}
+
+	loginBtn.onclick = function() {
+		checkGHLogin();
 	}
 };
 
@@ -94,6 +103,24 @@ function pompomup() {
 		document.getElementById("sec").innerHTML = totalSec % 60;
 	};
 }
+
+/*
+	firebase shizzle below 
+*/
+
+function checkGHLogin() {
+	var ref = new Firebase("https://pompomodoro.firebaseio.com");
+	ref.authWithOAuthPopup("github", function(error, authData) {
+  	
+	  	if (error) {
+	    	console.log("Login Failed!", error);
+	  	} 
+	  	else {
+	    	console.log("Authenticated successfully with payload:", authData);
+	  	}
+	});
+}
+
 
 window.onload = function() {
 	init();
