@@ -6,6 +6,7 @@
 	- TODO
 		toast notification (partly done)
 		progress bar(?)
+		firebase 
 
 	author kjutbring
 */
