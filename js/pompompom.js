@@ -11,6 +11,7 @@
 */
 
 var totalSec = 25 * 60;
+var noSpeed = 0;
 var counter;
 var amountPoms;
 var notification;
@@ -35,18 +36,24 @@ function init() {
 };
 
 function pompomStart() {
-	counter = setInterval(pompomup, 1000);
 
-	pompomup();
+	if (noSpeed == 0) {
+		clearInterval(counter);
+		counter = setInterval(pompomup, 1000);
+		pompomup();
+		noSpeed = 1;
+	}
 };
 
 function pompomStop() {
 	clearInterval(counter);
+	noSpeed = 0;
 };
 
 function pompomReset() {
 	clearInterval(counter);
 	totalSec = 	60 * 25;
+	noSpeed = 0;
 	document.getElementById("success").style.display = "none";
 	document.getElementById("min").innerHTML = Math.floor(totalSec / 60);
 	document.getElementById("sec").innerHTML = totalSec % 60 + "0";
@@ -89,6 +96,5 @@ function pompomup() {
 
 window.onload = function() {
 	init();
-	browserSup();
 };
 
