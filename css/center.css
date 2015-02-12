@@ -1,0 +1,12 @@
+.center {
+  margin: 0 auto;
+  width: 417px;
+  background: white;
+  padding: 20px;
+  color: black;
+}
+
+.center-header {
+  text-align: center;
+}
+
