@@ -12,7 +12,7 @@
 		firebase
 			- login (done)
 			- logout/terminate session (done)
-			- write to firebase at completed pompom
+			- write to firebase at completed pompom (done)
 			- get statistics from firebase
 
 	author kjutbring
@@ -56,6 +56,7 @@ function init() {
 		pompomLogout();
 	}
 
+	// this is secured on firebase lvl, only registered users have read/write
 	ref = new Firebase("https://pompomodoro.firebaseio.com/pompompom");
 };
 
@@ -96,7 +97,7 @@ function pompomup() {
 		totalSec = 25 * 60;
 		pompomStop();
 
-		pompomAdd();
+		ref.onAuth(pompomAdd);
 
 		document.getElementById("success").style.display = "block";
 		return;
@@ -140,6 +141,7 @@ function makeNotification() {
 	}
 }
 
+// gen unique id for pompoms
 function pompomRandom() {
 	var pompomStr = "";
 	var pomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!¤%&/()=?@£€{}";
@@ -179,6 +181,15 @@ function pompomLogin() {
 	});
 }
 
+function authDataCallback(authData) {
+	if (authData) {
+		console.log("User " + authData.uid + " is logged in with " + authData.provider);
+	} 
+	else {
+		console.log("User is logged out");
+	}
+}
+
 function pompomLogout() {
 	ref.unauth();
 
@@ -187,21 +198,26 @@ function pompomLogout() {
 
 }
 
-function pompomAdd() {
-	var pompomRef = ref.child("pompoms");
-	var pompomDate = new Date();
-	var pompomId = pompomRandom();
-	alert(pompomId);
+function pompomAdd(authData) {
 
-	pompomRef.child(pompomId).set({
-			year: pompomDate.getFullYear(),
-			month: pompomDate.getMonth() + 1,
-			day: pompomDate.getDay(),
-			hour: pompomDate.getHours(),
-			min: pompomDate.getMinutes()
-	});
+	if (authData) {
+		var pompomRef = ref.child(authData.uid);
+		var pompomDate = new Date();
+		var pompomId = pompomRandom();
 
+		pompomRef.child(pompomId).set({
+				year: pompomDate.getFullYear(),
+				month: pompomDate.getMonth() + 1,
+				day: pompomDate.getDate(),
+				hour: pompomDate.getHours(),
+				min: pompomDate.getMinutes()
+		});
+	}
+	else {
+		console.log("Not logged in.")
+	}
 }
+
 
 window.onload = function() {
 	init();
