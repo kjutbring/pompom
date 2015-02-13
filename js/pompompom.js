@@ -57,7 +57,6 @@ function init() {
 	}
 
 	ref = new Firebase("https://pompomodoro.firebaseio.com/pompompom");
-	
 };
 
 function pompomStart() {
@@ -139,6 +138,16 @@ function makeNotification() {
 	}
 }
 
+function pompomRandom() {
+	var pompomStr = "";
+	var pomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!#¤%&/()=?@£$€{[]}";
+
+	for (var i = 0; i <5; i++) {
+		pompomStr += pomChars.charAt(Math.floor(Math.random() * pmChars.length));
+	}
+
+	return(pompomStr);
+}
 
 /*
 	firebase shizzle below 
@@ -178,10 +187,18 @@ function pompomLogout() {
 
 function pompomAdd() {
 	var pompomRef = ref.child("pompoms");
+	var pompomDate = Date();
+	var pompomId = pompomRandom();
 
 	pompomRef.set({
-		
-	})
+		pompomId: {
+			year: pompomDate.getFullYear(),
+			month: pompomDate.getMonth(),
+			day: pompomDate.getDay(),
+			hour: pompomDate.getHours(),
+			min: pompomDate.getMinutes()
+		}
+	});
 }
 
 window.onload = function() {
