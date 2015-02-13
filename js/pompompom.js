@@ -15,11 +15,11 @@
 	timer logic below
 */
 
-var totalSec = 25 * 60;
+var totalSec = 3;
 var noSpeed = 0;
 var counter;
 var amountPoms;
-var notification;
+var ref;
 
 function init() {
 	// get btns
@@ -41,8 +41,11 @@ function init() {
 	}
 
 	loginBtn.onclick = function() {
-		checkGHLogin();
+		pompomLogin();
 	}
+
+	ref = new Firebase("https://pompomodoro.firebaseio.com");
+	
 };
 
 function pompomStart() {
@@ -77,9 +80,7 @@ function pompomup() {
 		document.getElementById("min").innerHTML = "00";
 		document.getElementById("sec").innerHTML = "00";
 
-		notification = new Notification("Pomodoro completed!", {
-			body: "Good job!"
-		});
+		makeNotification();
 
 		totalSec = 25 * 60;
 		pompomStop();
@@ -104,25 +105,47 @@ function pompomup() {
 	};
 }
 
+function checkNotificationPerm() {
+	if (!window.webkitNotifications || window.webkitNotifications.checkPermission() == 0) {
+		return;
+	}
+	else {
+		window.webkitNotifications.requestPermission();
+	}
+}
+
+function makeNotification() {
+	var notification = new Notification("Pomodoro completed!", {
+		body: "Click me to start a new pomodoro!"
+	});
+}
+
+
 /*
 	firebase shizzle below 
 */
 
-function checkGHLogin() {
-	var ref = new Firebase("https://pompomodoro.firebaseio.com");
-	ref.authWithOAuthPopup("github", function(error, authData) {
-  	
-	  	if (error) {
-	    	console.log("Login Failed!", error);
-	  	} 
-	  	else {
-	    	console.log("Authenticated successfully with payload:", authData);
-	  	}
+function pompomLogin() {
+	var inEmail = document.getElementById("inputEmail").value;
+	var inPassword = document.getElementById("inputPassword").value;
+
+	ref.authWithPassword({
+		email : inEmail,
+		password : inPassword
+		}, function(error, authData) {
+			if (error) {
+				console.log("Login Failed!", error);
+				document.getElementById("invalid").style.display = "block";
+			} else {
+				console.log("Authenticated successfully with payload:", authData);
+
+			}
 	});
 }
 
 
 window.onload = function() {
 	init();
+	checkNotificationPerm();
 };
 
