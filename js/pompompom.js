@@ -22,7 +22,7 @@
 	timer logic below
 */
 
-var totalSec = 3;
+var totalSec = 25 * 60;
 var noSpeed = 0;
 var counter;
 var amountPoms;
@@ -184,6 +184,8 @@ function pompomLogin() {
 function authDataCallback(authData) {
 	if (authData) {
 		console.log("User " + authData.uid + " is logged in with " + authData.provider);
+		document.getElementById("loginForm").style.display = "none";
+		document.getElementById("logout").style.display = "block";
 	} 
 	else {
 		console.log("User is logged out");
@@ -222,5 +224,7 @@ function pompomAdd(authData) {
 window.onload = function() {
 	init();
 	checkNotificationPerm();
+	// haz auth?
+	ref.onAuth(authDataCallback);
 };
 
