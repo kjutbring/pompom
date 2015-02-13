@@ -1,12 +1,19 @@
 /*
 	pompompom.js
 
-	timer to run a pomodoro timer
+	pomodoro timer for add kids like me
 
 	- TODO
-		toast notification (partly done)
+		webkit notification
+			- display (done)
+			- close on click (done)
+			- start new pompom on click (done)
 		progress bar(?)
-		firebase 
+		firebase
+			- login (done)
+			- logout/terminate session (done)
+			- write to firebase at completed pompom
+			- get statistics from firebase
 
 	author kjutbring
 */
@@ -27,6 +34,7 @@ function init() {
 	var stopBtn = document.getElementById("stop");
 	var resetBtn = document.getElementById("reset");
 	var loginBtn = document.getElementById("login");
+	var logoutBtn = document.getElementById("logout");
 
 	startBtn.onclick = function() {
 		pompomStart();
@@ -44,7 +52,11 @@ function init() {
 		pompomLogin();
 	}
 
-	ref = new Firebase("https://pompomodoro.firebaseio.com");
+	logoutBtn.onclick = function() {
+		pompomLogout();
+	}
+
+	ref = new Firebase("https://pompomodoro.firebaseio.com/pompompom");
 	
 };
 
@@ -118,6 +130,13 @@ function makeNotification() {
 	var notification = new Notification("Pomodoro completed!", {
 		body: "Click me to start a new pomodoro!"
 	});
+
+	notification.onclick = function() {
+		window.focus();
+		pompomReset();
+		pompomStart();
+		this.cancel();
+	}
 }
 
 
@@ -139,10 +158,31 @@ function pompomLogin() {
 			} else {
 				console.log("Authenticated successfully with payload:", authData);
 
+				document.getElementById("loginForm").style.display = "none";
+				document.getElementById("logout").style.display = "block";
+
+				if (document.getElementById("invalid").style.display = "block") {
+					document.getElementById("invalid").style.display = "none";
+				}
 			}
 	});
 }
 
+function pompomLogout() {
+	ref.unauth();
+
+	document.getElementById("logout").style.display = "none";
+	document.getElementById("loginForm").style.display = "block";
+
+}
+
+function pompomAdd() {
+	var pompomRef = ref.child("pompoms");
+
+	pompomRef.set({
+		
+	})
+}
 
 window.onload = function() {
 	init();
