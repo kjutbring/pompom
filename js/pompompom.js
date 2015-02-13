@@ -96,6 +96,8 @@ function pompomup() {
 		totalSec = 25 * 60;
 		pompomStop();
 
+		pompomAdd();
+
 		document.getElementById("success").style.display = "block";
 		return;
 	}
@@ -140,10 +142,10 @@ function makeNotification() {
 
 function pompomRandom() {
 	var pompomStr = "";
-	var pomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!#¤%&/()=?@£$€{[]}";
+	var pomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!¤%&/()=?@£€{}";
 
-	for (var i = 0; i <5; i++) {
-		pompomStr += pomChars.charAt(Math.floor(Math.random() * pmChars.length));
+	for (var i = 0; i <10; i++) {
+		pompomStr += pomChars.charAt(Math.floor(Math.random() * pomChars.length));
 	}
 
 	return(pompomStr);
@@ -187,18 +189,18 @@ function pompomLogout() {
 
 function pompomAdd() {
 	var pompomRef = ref.child("pompoms");
-	var pompomDate = Date();
+	var pompomDate = new Date();
 	var pompomId = pompomRandom();
+	alert(pompomId);
 
-	pompomRef.set({
-		pompomId: {
+	pompomRef.child(pompomId).set({
 			year: pompomDate.getFullYear(),
-			month: pompomDate.getMonth(),
+			month: pompomDate.getMonth() + 1,
 			day: pompomDate.getDay(),
 			hour: pompomDate.getHours(),
 			min: pompomDate.getMinutes()
-		}
 	});
+
 }
 
 window.onload = function() {
