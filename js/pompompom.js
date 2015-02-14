@@ -22,7 +22,7 @@
 	timer logic below
 */
 
-var totalSec = 25 * 60;
+var totalSec = 3;
 var noSpeed = 0;
 var counter;
 var amountPoms;
@@ -98,6 +98,7 @@ function pompomup() {
 		pompomStop();
 
 		ref.onAuth(pompomAdd);
+		ref.onAuth(pompomGetToday);
 
 		document.getElementById("success").style.display = "block";
 		return;
@@ -186,6 +187,12 @@ function authDataCallback(authData) {
 		console.log("User " + authData.uid + " is logged in with " + authData.provider);
 		document.getElementById("loginForm").style.display = "none";
 		document.getElementById("logout").style.display = "block";
+
+		var pompomRef = ref.child(authData.uid);
+		var pompomDate = new Date();
+		var pompomToday = 0;
+
+		ref.onAuth(pompomGetToday);
 	} 
 	else {
 		console.log("User is logged out");
@@ -194,10 +201,10 @@ function authDataCallback(authData) {
 
 function pompomLogout() {
 	ref.unauth();
-
 	document.getElementById("logout").style.display = "none";
 	document.getElementById("loginForm").style.display = "block";
-
+	document.getElementById("pompomTodayDiv").style.display = "none";
+	document.getElementById("pompomToday").innerHTML = 0;
 }
 
 function pompomAdd(authData) {
@@ -207,6 +214,11 @@ function pompomAdd(authData) {
 		var pompomDate = new Date();
 		var pompomId = pompomRandom();
 
+		/* ??
+		var idDate = pompomDate.getFullYear() + "-" + pompomDate.getMonth() + 1 + 
+					"-" +	pompomDate.getDate() + ":" + pompomDate.getHours() + 
+						":" + pompomDate.getMinutes();
+		*/
 		pompomRef.child(pompomId).set({
 				year: pompomDate.getFullYear(),
 				month: pompomDate.getMonth() + 1,
@@ -216,10 +228,34 @@ function pompomAdd(authData) {
 		});
 	}
 	else {
-		console.log("Not logged in.")
+		console.log("Not logged in.");
 	}
 }
 
+function pompomGetToday(authData) {
+
+	if (authData) {
+		var pompomRef = ref.child(authData.uid);
+		var pompomDate = new Date();
+		var pompomToday = 0;
+
+
+		pompomRef.on("child_added", function(snapshot) {
+			if (snapshot.val().day ==  pompomDate.getDate()) {
+				pompomToday = pompomToday + 1;
+				document.getElementById("pompomToday").innerHTML = pompomToday;
+				document.getElementById("pompomTodayDiv").style.display = "block";
+			}
+			else {
+				console.log("Not todays Date: " + snapshot.val().day)
+			}
+		});
+
+	} 
+	else {
+		console.log("Not logged in.");
+	}
+}
 
 window.onload = function() {
 	init();
