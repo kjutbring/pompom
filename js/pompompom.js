@@ -162,6 +162,8 @@ function pompomLogin() {
 	var inEmail = document.getElementById("inputEmail").value;
 	var inPassword = document.getElementById("inputPassword").value;
 
+	document.getElementById("login").innerHTML = "Loggin in...";
+
 	ref.authWithPassword({
 		email : inEmail,
 		password : inPassword
@@ -169,9 +171,11 @@ function pompomLogin() {
 			if (error) {
 				console.log("Login Failed!", error);
 				document.getElementById("invalid").style.display = "block";
+				document.getElementById("login").innerHTML = "Login";
 			} else {
 				console.log("Authenticated successfully with payload:", authData);
 
+				document.getElementById("login").innerHTML = "Login";
 				document.getElementById("loginForm").style.display = "none";
 				document.getElementById("logout").style.display = "block";
 
