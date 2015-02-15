@@ -65,6 +65,7 @@ function pompomStart() {
 	if (noSpeed == 0) {
 		clearInterval(counter);
 		counter = setInterval(pompomup, 1000);
+		document.getElementById("success").style.display = "none";
 		pompomup();
 		noSpeed = 1;
 	}
@@ -97,8 +98,8 @@ function pompomup() {
 		totalSec = 25 * 60;
 		pompomStop();
 
-		ref.onAuth(pompomAdd);
-		ref.onAuth(pompomGetToday);
+		pompomAdd();
+		pompomGetToday();
 
 		document.getElementById("success").style.display = "block";
 		return;
@@ -196,7 +197,7 @@ function authDataCallback(authData) {
 		var pompomDate = new Date();
 		var pompomToday = 0;
 
-		ref.onAuth(pompomGetToday);
+		pompomGetToday();		
 	} 
 	else {
 		console.log("User is logged out");
@@ -204,6 +205,8 @@ function authDataCallback(authData) {
 }
 
 function pompomLogout() {
+	pompomStop();
+	pompomReset();
 	ref.unauth();
 	document.getElementById("logout").style.display = "none";
 	document.getElementById("loginForm").style.display = "block";
@@ -211,18 +214,14 @@ function pompomLogout() {
 	document.getElementById("pompomToday").innerHTML = 0;
 }
 
-function pompomAdd(authData) {
+function pompomAdd() {
+	var authData = ref.getAuth();
 
 	if (authData) {
 		var pompomRef = ref.child(authData.uid);
 		var pompomDate = new Date();
 		var pompomId = pompomRandom();
 
-		/* ??
-		var idDate = pompomDate.getFullYear() + "-" + pompomDate.getMonth() + 1 + 
-					"-" +	pompomDate.getDate() + ":" + pompomDate.getHours() + 
-						":" + pompomDate.getMinutes();
-		*/
 		pompomRef.child(pompomId).set({
 				year: pompomDate.getFullYear(),
 				month: pompomDate.getMonth() + 1,
@@ -236,7 +235,8 @@ function pompomAdd(authData) {
 	}
 }
 
-function pompomGetToday(authData) {
+function pompomGetToday() {
+	var authData = ref.getAuth();
 
 	if (authData) {
 		var pompomRef = ref.child(authData.uid);
